@@ -7,6 +7,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     username: 'sam',
     password: 'sam123',
     database: 'taskmanagement',
-    entities: [__dirname + '/../**/*.entity.ts'], // => 
+    entities: [__dirname + '/../**/*.entity.ts'], // => represent table
     synchronize: true, // => 
 };
