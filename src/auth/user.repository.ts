@@ -1,7 +1,6 @@
 import {
     ConflictException,
     InternalServerErrorException,
-    NotFoundException,
 } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
