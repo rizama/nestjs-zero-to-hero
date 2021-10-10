@@ -12,7 +12,7 @@ import { UserRepository } from './user.repository';
         JwtModule.register({
             secret: `95efb59bdae828541fc25ee7664cfb303b358901`,
             signOptions: {
-                expiresIn: 3600,
+                expiresIn: "5m",
             },
         }),
         PassportModule.register({
