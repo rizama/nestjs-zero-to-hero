@@ -10,7 +10,7 @@ import { UserRepository } from './user.repository';
 @Module({
     imports: [
         JwtModule.register({
-            secret: `95efb59bdae828541fc25ee7664cfb303b358901`,
+            secret: `${process.env.JWT_SECRET}`,
             signOptions: {
                 expiresIn: "5m",
             },
