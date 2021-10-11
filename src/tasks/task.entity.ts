@@ -1,7 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/auth/user.entity';
+import {
+    BaseEntity,
+    Column,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { TaskStatus } from './task.enum';
 
-@Entity("tasks") // => table name. If not specified, then table name is generated from entity class name.
+@Entity('tasks') // => table name. If not specified, then table name is generated from entity class name.
 export class TaskEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -14,4 +21,7 @@ export class TaskEntity extends BaseEntity {
 
     @Column()
     status: TaskStatus;
+
+    @ManyToOne((type) => User, (user) => user.tasks, { eager: false })
+    user: User;
 }
