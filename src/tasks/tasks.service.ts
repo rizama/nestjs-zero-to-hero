@@ -26,7 +26,7 @@ export class TasksService {
 
     async getTaskById(id: number, user: User): Promise<TaskEntity> {
         const found = await this.taskRepository.findOne({
-            where: {id, userId: user.id}
+            where: { id, userId: user.id },
         });
 
         if (!found) {
@@ -43,8 +43,12 @@ export class TasksService {
         return this.taskRepository.createTask(createTaskDto, user);
     }
 
-    async deleteTaskById(id: number): Promise<void> {
-        const result = await this.taskRepository.delete(id);
+    async deleteTaskById(id: number, user: User): Promise<void> {
+        const result = await this.taskRepository.delete({
+            id: id,
+            userId: user.id,
+        });
+
         Logger.log(JSON.stringify(result));
 
         if (!result.affected) {
@@ -52,7 +56,11 @@ export class TasksService {
         }
     }
 
-    async updateTaskStatusById(status: TaskStatus, id: number, user: User): Promise<TaskEntity>{
+    async updateTaskStatusById(
+        status: TaskStatus,
+        id: number,
+        user: User,
+    ): Promise<TaskEntity> {
         const task = await this.getTaskById(id, user);
         task.status = status;
         await task.save();
