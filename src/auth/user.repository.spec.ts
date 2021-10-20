@@ -3,7 +3,7 @@ import {
     InternalServerErrorException,
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { UserRepository } from 'src/auth/user.repository';
+import { UserRepository } from './user.repository';
 import { User } from './user.entity';
 import * as bcrypt from 'bcryptjs';
 
@@ -38,16 +38,16 @@ describe('UserRepository', () => {
             ).resolves.not.toThrow();
         });
 
-        it('throws a conflict exception as username already exists', () => {
+        it('throws a conflict exception as username already exists', async () => {
             save.mockRejectedValue({ code: '23505' });
-            expect(userRepository.signUp(mockCredentialsDto)).rejects.toThrow(
+            await expect(userRepository.signUp(mockCredentialsDto)).rejects.toThrow(
                 ConflictException,
             );
         });
 
-        it('throws a conflic exception as username already exists', () => {
+        it('throws a conflict exception as username already exists', async () => {
             save.mockRejectedValue({ code: '123123' }); // unhandle error code
-            expect(userRepository.signUp(mockCredentialsDto)).rejects.toThrow(
+            await expect(userRepository.signUp(mockCredentialsDto)).rejects.toThrow(
                 InternalServerErrorException,
             );
         });
@@ -60,12 +60,12 @@ describe('UserRepository', () => {
             userRepository.findOne = jest.fn();
             user = new User();
             user.username = 'TestUsername';
-            user.validatePassword = jest.fn();
+            user.verifyPassword = jest.fn();
         });
 
         it('returns the username as validation is successful', async () => {
             userRepository.findOne.mockResolvedValue(user);
-            user.validatePassword.mockResolvedValue(true);
+            user.verifyPassword.mockResolvedValue(true);
 
             const result = await userRepository.validateUserPassword(
                 mockCredentialsDto,
@@ -78,17 +78,17 @@ describe('UserRepository', () => {
             const result = await userRepository.validateUserPassword(
                 mockCredentialsDto,
             );
-            expect(user.validatePassword).not.toHaveBeenCalled();
+            expect(user.verifyPassword).not.toHaveBeenCalled();
             expect(result).toBeNull();
         });
 
         it('returns null as password is invalid', async () => {
             userRepository.findOne.mockResolvedValue(user);
-            user.validatePassword.mockResolvedValue(false);
+            user.verifyPassword.mockResolvedValue(false);
             const result = await userRepository.validateUserPassword(
                 mockCredentialsDto,
             );
-            expect(user.validatePassword).toHaveBeenCalled();
+            expect(user.verifyPassword).toHaveBeenCalled();
             expect(result).toBeNull();
         });
     });
